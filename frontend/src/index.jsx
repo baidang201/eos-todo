@@ -4,10 +4,10 @@ import EOS from 'eosjs'
 import update from 'react-addons-update';
 
 const EOS_CONFIG = {
-  contractName: "todo", // Contract name
-  contractSender: "todo", // User executing the contract (should be paired with private key)
+  contractName: "bytemaster", // Contract name,who create contract
+  contractSender: "bytemaster", // User executing the contract (should be paired with private key),who run contract
   clientConfig: {
-    keyProvider: [''], // Your private key
+    keyProvider: ['5Ke4aKjY9PGZJnxNV54REsGUqQqRZNpJKr6unnkWLmU1oTT16Cw'], // Your private key
     httpEndpoint: 'http://127.0.0.1:8888' // EOS http endpoint
   }
 }
@@ -50,8 +50,14 @@ class TodoList extends React.Component {
   }
 
   loadTodos() {
-    this.eosClient.getTableRows('todos', 'todo', 'todo').then((data) => {
-      this.setState({ todos: data })
+    this.eosClient.getTableRows(
+      {
+      "scope":EOS_CONFIG.contractName,   
+      "code":EOS_CONFIG.contractName,  
+      "table":"todos",  
+      "json":true}
+    ).then((data) => {
+      this.setState({ todos: data.rows })
     }).catch((e) => {
       console.error(e);
     })
